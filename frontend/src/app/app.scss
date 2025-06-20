@@ -1,0 +1,10 @@
+.navbar.bg-black {
+  background: #111 !important;
+  color: #fff;
+}
+.navbar .navbar-brand, .navbar .nav-link {
+  color: #fff !important;
+}
+.navbar .nav-link.active, .navbar .nav-link:focus, .navbar .nav-link:hover {
+  color: #ccc !important;
+}

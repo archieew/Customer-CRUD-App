@@ -1,0 +1,192 @@
+<!-- Main Content -->
+<div class="main-content d-flex justify-content-center align-items-start py-4">
+  <div class="app-card w-100" style="max-width: 1000px;">
+    <div class="card-body p-4">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold m-0">Customers</h4>
+        <button class="btn btn-primary" (click)="onCreate()">
+          <i class="bi bi-plus-lg me-2"></i>Add Customer
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="search-container">
+        <form (ngSubmit)="onSearch()">
+          <input 
+            type="text" 
+            class="form-control search-input" 
+            placeholder="Search customers..." 
+            [(ngModel)]="search" 
+            name="search"
+          >
+        </form>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="d-flex justify-content-center py-4">
+        <div class="loading-spinner"></div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="app-alert app-alert-danger">
+        <i class="bi bi-exclamation-circle me-2"></i>{{ error }}
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive" *ngIf="customers.length && !loading">
+        <table class="app-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let customer of customers">
+              <td class="fw-medium">{{ customer.first_name }} {{ customer.last_name }}</td>
+              <td>{{ customer.email }}</td>
+              <td>{{ customer.contact_number }}</td>
+              <td>
+                <div class="d-flex justify-content-end gap-2">
+                  <button class="action-btn action-btn-view" (click)="onView(customer)">
+                    <i class="bi bi-eye me-1"></i>View
+                  </button>
+                  <button class="action-btn action-btn-edit" (click)="onEdit(customer)">
+                    <i class="bi bi-pencil me-1"></i>Edit
+                  </button>
+                  <button class="btn btn-danger action-btn" (click)="onDelete(customer)">
+                    <i class="bi bi-trash me-1"></i>Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!customers.length && !loading" class="text-center py-5">
+        <i class="bi bi-inbox display-1 text-muted"></i>
+        <p class="mt-3 text-muted">No customers found</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div *ngIf="showDeleteModal" class="app-modal-backdrop">
+  <div class="app-modal">
+    <h5 class="fw-bold mb-4">Delete Customer</h5>
+    <p class="text-muted">
+      Are you sure you want to delete <strong>{{ customerToDelete?.first_name }} {{ customerToDelete?.last_name }}</strong>?
+      This action cannot be undone.
+    </p>
+    <div class="d-flex justify-content-end gap-3 mt-4">
+      <button class="btn btn-light" (click)="cancelDelete()">Cancel</button>
+      <button class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div *ngIf="showToast" class="app-toast" [ngClass]="{'app-toast-success': toastType === 'success', 'app-toast-danger': toastType === 'danger'}">
+  <div class="d-flex align-items-center">
+    <i class="bi" [ngClass]="{'bi-check-circle': toastType === 'success', 'bi-x-circle': toastType === 'danger'}"></i>
+    <span class="ms-2">{{ toastMessage }}</span>
+    <button class="btn-close ms-3" (click)="showToast = false"></button>
+  </div>
+</div>
+
+<style>
+  body {
+    background: #f5f6fa !important;
+  }
+  .minimal-navbar {
+    border-bottom: 1px solid #eaeaea;
+    background: #fff !important;
+    box-shadow: 0 2px 8px 0 rgba(35,57,93,0.04);
+  }
+  .main-content {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  .minimal-card {
+    border-radius: 1.25rem;
+    border: none;
+    background: #fff;
+    box-shadow: 0 2px 16px 0 rgba(35,57,93,0.08);
+  }
+  .minimal-table th, .minimal-table td {
+    vertical-align: middle;
+    border: none;
+    background: transparent;
+  }
+  .minimal-table th {
+    color: #222;
+    font-weight: 700;
+    background: #f5f6fa;
+    border-bottom: 2px solid #eaeaea;
+  }
+  .minimal-table tr {
+    border-radius: 0.75rem;
+    transition: background 0.2s;
+  }
+  .minimal-table tr:hover {
+    background: #f0f4fa;
+  }
+  .modal-backdrop-custom {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-dialog-custom {
+    background: white;
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    min-width: 320px;
+    max-width: 90vw;
+    padding: 0;
+  }
+  .action-btn-view {
+    color: #0d6efd;
+    text-decoration: underline;
+    padding: 0.375rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    transition: background 0.15s;
+  }
+  .action-btn-view:hover {
+    background: #e7f1ff;
+    color: #084298;
+    text-decoration: underline;
+  }
+  .action-btn-update {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    min-width: 80px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .action-btn-update:hover {
+    background: #222;
+    color: #fff;
+  }
+  .action-btn-delete {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    min-width: 80px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .action-btn-delete:hover {
+    background: #b02a37;
+    color: #fff;
+  }
+</style>

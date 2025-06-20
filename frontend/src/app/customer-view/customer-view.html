@@ -1,0 +1,90 @@
+<!-- Main Content -->
+<div class="main-content d-flex justify-content-center align-items-start py-4">
+  <div class="app-card w-100" style="max-width: 600px;">
+    <div class="card-body p-4">
+      <!-- Loading State -->
+      <div *ngIf="loading" class="d-flex justify-content-center py-4">
+        <div class="loading-spinner"></div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="app-alert app-alert-danger">
+        <i class="bi bi-exclamation-circle me-2"></i>{{ error }}
+      </div>
+
+      <!-- Customer Details -->
+      <div *ngIf="customer && !loading">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4 class="fw-bold m-0">Customer Details</h4>
+        </div>
+
+        <!-- Info Card -->
+        <div class="bg-light rounded-3 p-4 mb-4">
+          <div class="d-flex align-items-center mb-4">
+            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" 
+                 style="width: 48px; height: 48px;">
+              <i class="bi bi-person-fill text-white fs-4"></i>
+            </div>
+            <div class="ms-3">
+              <h5 class="fw-bold mb-1">{{ customer.first_name }} {{ customer.last_name }}</h5>
+              <p class="text-muted mb-0">Customer ID: #{{ customer.id }}</p>
+            </div>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted small mb-1">Email Address</label>
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-envelope me-2 text-primary"></i>
+                  <span>{{ customer.email }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted small mb-1">Contact Number</label>
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-telephone me-2 text-primary"></i>
+                  <span>{{ customer.contact_number }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex justify-content-between align-items-center">
+          <button class="btn btn-light" (click)="onBack()">
+            <i class="bi bi-arrow-left me-2"></i>Back
+          </button>
+          <button class="btn btn-primary" (click)="onEdit()">
+            <i class="bi bi-pencil me-2"></i>Edit Customer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  body {
+    background: #f5f6fa !important;
+  }
+  .minimal-navbar {
+    border-bottom: 1px solid #eaeaea;
+    background: #fff !important;
+    box-shadow: 0 2px 8px 0 rgba(35,57,93,0.04);
+  }
+  .main-content {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  .minimal-card {
+    border-radius: 1.25rem;
+    border: none;
+    background: #fff;
+    box-shadow: 0 2px 16px 0 rgba(35,57,93,0.08);
+  }
+</style> 

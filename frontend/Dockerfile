@@ -1,0 +1,33 @@
+# Build stage
+FROM node:20-alpine as builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Clean install dependencies
+RUN rm -rf node_modules && \
+    npm cache clean --force && \
+    npm install --force
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Production stage
+FROM nginx:alpine
+
+# Copy built assets from builder stage
+COPY --from=builder /app/dist/frontend /usr/share/nginx/html
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 4200
+EXPOSE 4200
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"] 
